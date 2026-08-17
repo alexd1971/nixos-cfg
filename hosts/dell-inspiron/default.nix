@@ -13,6 +13,7 @@ inputs.nixpkgs.lib.nixosSystem {
     inputs.disko.nixosModules.disko
     ../../modules/common
     ../../modules/disko
+    ./hardware.nix
     {
       nixpkgs.hostPlatform = system;
 
