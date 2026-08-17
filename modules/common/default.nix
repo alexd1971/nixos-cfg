@@ -3,6 +3,7 @@
     ./boot.nix
     ./hardware.nix
     ./nix.nix
+    ./packages.nix
     ./networking.nix
     ./security.nix
     ./users.nix
