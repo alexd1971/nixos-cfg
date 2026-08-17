@@ -1,7 +1,10 @@
+{ pkgs, ... }:
+
 {
   users.users.alexey = {
     isNormalUser = true;
     initialPassword = "changeme";
+    shell = pkgs.bashInteractive;
 
     extraGroups = [
       "wheel"
