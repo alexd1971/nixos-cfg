@@ -11,6 +11,7 @@ inputs.nixpkgs.lib.nixosSystem {
 
   modules = [
     inputs.disko.nixosModules.disko
+    inputs.home-manager.nixosModules.home-manager
     ../../modules/common
     ../../modules/disko
     ./hardware.nix
@@ -25,6 +26,10 @@ inputs.nixpkgs.lib.nixosSystem {
         # Example: swapSize = "16G";
         swapSize = "10G";
       };
+
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.users.alexey = import ../../home/alexey;
     }
   ];
 }
