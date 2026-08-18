@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  imports = [
+    ./sway.nix
+  ];
+
   home.username = "alexey";
   home.homeDirectory = "/home/alexey";
 

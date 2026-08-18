@@ -1,6 +1,7 @@
 {
   imports = [
     ./boot.nix
+    ./desktop
     ./hardware.nix
     ./nix.nix
     ./packages.nix
