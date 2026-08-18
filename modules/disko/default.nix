@@ -74,7 +74,6 @@ in
                 size = swapSize;
                 content = {
                   type = "swap";
-                  resumeDevice = true;
                 };
               };
             };

@@ -7,7 +7,7 @@
   networking.networkmanager.dns = "none";
   networking.networkmanager.enable = true;
 
-  services.dnscrypt-proxy2 = {
+  services.dnscrypt-proxy = {
     enable = true;
 
     settings = {
