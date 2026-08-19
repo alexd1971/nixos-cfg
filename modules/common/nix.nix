@@ -4,9 +4,16 @@
       "nix-command"
       "flakes"
     ];
+    auto-optimise-store = true;
     trusted-users = [
       "root"
       "@wheel"
     ];
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
   };
 }
