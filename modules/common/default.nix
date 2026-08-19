@@ -3,10 +3,11 @@
     ./boot.nix
     ./desktop
     ./hardware.nix
+    ./localization.nix
     ./nix.nix
+    ./networking.nix
     ./packages.nix
     ./power.nix
-    ./networking.nix
     ./security.nix
     ./users.nix
   ];
