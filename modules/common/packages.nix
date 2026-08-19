@@ -5,9 +5,6 @@
     # Editors
     vim
 
-    # Version control
-    git
-
     # Shell basics
     file
     less

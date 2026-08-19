@@ -1,18 +1,14 @@
-{ pkgs, ... }:
-
+{ ... }:
 {
   imports = [
+    ./git.nix
     ./sway.nix
   ];
 
   home.username = "alexey";
   home.homeDirectory = "/home/alexey";
 
-  home.packages = [
-    pkgs.home-manager
-  ];
+  home.stateVersion = "26.05";
 
   programs.home-manager.enable = true;
-
-  home.stateVersion = "26.05";
 }

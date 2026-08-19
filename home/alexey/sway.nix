@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   programs.foot.enable = true;
@@ -7,12 +7,21 @@
 
   wayland.windowManager.sway = {
     enable = true;
-    package = pkgs.sway;
 
     config = {
       modifier = "Mod4";
       terminal = "foot";
       menu = "wofi --show drun";
+
+      input."type:touchpad" = {
+        tap = "enabled";
+        natural_scroll = "enabled";
+      };
+
+      input."type:keyboard" = {
+        xkb_layout = "us,ru";
+        xkb_options = "grp:win_space_toggle";
+      };
 
       bars = [
         {
@@ -23,6 +32,24 @@
       keybindings =
         let
           modifier = "Mod4";
+          workspaces = [
+            "1"
+            "2"
+            "3"
+            "4"
+            "5"
+            "6"
+            "7"
+            "8"
+            "9"
+            "0"
+          ];
+          switchToWorkspace =
+            ws:
+            {
+              "${modifier}+${ws}" = "workspace number ${ws}";
+              "${modifier}+Shift+${ws}" = "move container to workspace number ${ws}";
+            };
         in
         {
           "${modifier}+Return" = "exec foot";
@@ -42,8 +69,9 @@
           "${modifier}+Shift+l" = "move right";
 
           "${modifier}+f" = "fullscreen toggle";
-          "${modifier}+space" = "floating toggle";
-        };
+          "${modifier}+w" = "floating toggle";
+        }
+        // builtins.foldl' (acc: ws: acc // (switchToWorkspace ws)) { } workspaces;
     };
   };
 }

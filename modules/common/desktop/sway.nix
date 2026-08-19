@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   programs.sway = {
@@ -15,12 +15,19 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    swayidle
-    swaylock
-
-    foot
-    waybar
-    wofi
-  ];
+  services.greetd.settings.default_session.command =
+    let
+      greeterSwayConfig = pkgs.writeText "greeter-sway.conf" ''
+        exec "${pkgs.regreet}/bin/regreet; swaymsg exit"
+        input "type:touchpad" {
+          tap enabled
+          natural_scroll enabled
+        }
+        input "type:keyboard" {
+          xkb_layout us,ru
+          xkb_options grp:win_space_toggle
+        }
+      '';
+    in
+    "${pkgs.sway}/bin/sway --config ${greeterSwayConfig}";
 }

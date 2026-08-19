@@ -29,6 +29,7 @@ inputs.nixpkgs.lib.nixosSystem {
 
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "backup";
       home-manager.users.alexey = import ../../home/alexey;
     }
   ];
