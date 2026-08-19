@@ -18,6 +18,8 @@
   outputs =
     inputs@{ ... }:
     {
+      formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.nixfmt;
+
       nixosConfigurations = {
         dell-inspiron = import ./hosts/dell-inspiron {
           inherit inputs;

@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  environment.variables.EDITOR = "vim";
+
   environment.systemPackages = with pkgs; [
     # Editors
     vim
@@ -10,6 +12,14 @@
     less
     tree
     which
+
+    # Archiving
+    unzip
+    zip
+
+    # Search
+    ripgrep
+    fd
 
     # Downloads / HTTP diagnostics
     curl

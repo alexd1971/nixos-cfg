@@ -1,9 +1,89 @@
-{ ... }:
+{ config, pkgs, ... }:
 
 {
   programs.foot.enable = true;
-  programs.waybar.enable = true;
   programs.wofi.enable = true;
+
+  programs.waybar = {
+    enable = true;
+
+    settings.mainBar = {
+      layer = "top";
+      position = "top";
+
+      modules-left = [
+        "sway/workspaces"
+        "sway/mode"
+      ];
+
+      modules-center = [
+        "sway/window"
+      ];
+
+      modules-right = [
+        "network"
+        "pulseaudio"
+        "cpu"
+        "memory"
+        "clock"
+        "tray"
+        "custom/power"
+      ];
+
+      "custom/power" = {
+        format = "⏻ ";
+        tooltip = false;
+
+        menu = "on-click";
+
+        # Используем абсолютный путь, а не $HOME.
+        menu-file =
+          "${config.xdg.configHome}/waybar/power_menu.xml";
+
+        menu-actions = {
+          suspend = "${pkgs.systemd}/bin/systemctl suspend";
+          hibernate = "${pkgs.systemd}/bin/systemctl hibernate";
+          shutdown = "${pkgs.systemd}/bin/systemctl poweroff";
+          reboot = "${pkgs.systemd}/bin/systemctl reboot";
+        };
+      };
+    };
+  };
+
+  xdg.configFile."waybar/power_menu.xml".text = ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <interface>
+      <object class="GtkMenu" id="menu">
+        <child>
+          <object class="GtkMenuItem" id="suspend">
+            <property name="label">Suspend</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="hibernate">
+            <property name="label">Hibernate</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparatorMenuItem" id="delimiter1"/>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="shutdown">
+            <property name="label">Shutdown</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="reboot">
+            <property name="label">Reboot</property>
+          </object>
+        </child>
+      </object>
+    </interface>
+  '';
 
   wayland.windowManager.sway = {
     enable = true;

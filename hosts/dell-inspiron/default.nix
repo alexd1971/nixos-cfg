@@ -9,21 +9,17 @@ inputs.nixpkgs.lib.nixosSystem {
     inherit inputs;
   };
 
-  modules = [
+modules = [
     inputs.disko.nixosModules.disko
     inputs.home-manager.nixosModules.home-manager
     ../../modules/common
     ../../modules/disko
     ./hardware.nix
     {
-      nixpkgs.hostPlatform = system;
-
       networking.hostName = "dell-inspiron";
 
       local.install = {
         disk = "/dev/sda";
-
-        # Example: swapSize = "16G";
         swapSize = "10G";
       };
 
