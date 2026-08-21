@@ -8,6 +8,50 @@ let
   installDisk = cfg.disk;
   swapSize = cfg.swapSize;
   hasSwap = swapSize != null;
+  luks = cfg.luks;
+
+  rootContent =
+    if luks then
+      {
+        type = "luks";
+        name = "root";
+        settings = {
+          allowDiscards = true;
+        };
+        content = {
+          type = "filesystem";
+          format = "ext4";
+          mountpoint = "/";
+        };
+      }
+    else
+      {
+        type = "filesystem";
+        format = "ext4";
+        mountpoint = "/";
+      };
+
+  swapContent =
+    if luks then
+      {
+        type = "luks";
+        name = "swap";
+        settings = {
+          allowDiscards = true;
+          crypttabExtraOpts = [
+            "tpm2-device=auto"
+          ];
+        };
+        content = {
+          type = "swap";
+          resumeDevice = true;
+        };
+      }
+    else
+      {
+        type = "swap";
+        resumeDevice = true;
+      };
 in
 {
   options.local.install = {
@@ -23,6 +67,12 @@ in
       default = null;
       example = "16G";
       description = "Optional swap partition size. If null, no swap partition is created.";
+    };
+
+    luks = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Encrypt the root partition with LUKS. The LUKS password is set interactively during nixos-anywhere installation.";
     };
   };
 
@@ -61,20 +111,14 @@ in
               root = {
                 priority = 3;
                 size = "100%";
-                content = {
-                  type = "filesystem";
-                  format = "ext4";
-                  mountpoint = "/";
-                };
+                content = rootContent;
               };
             }
             // lib.optionalAttrs hasSwap {
               swap = {
                 priority = 2;
                 size = swapSize;
-                content = {
-                  type = "swap";
-                };
+                content = swapContent;
               };
             };
         };

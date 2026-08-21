@@ -3,7 +3,8 @@
 {
   users.users.alexey = {
     isNormalUser = true;
-    initialPassword = "changeme";
+    # Bootstrap password for first local login. Change it immediately with `passwd`.
+    initialPassword = "admin";
     shell = pkgs.bashInteractive;
 
     extraGroups = [

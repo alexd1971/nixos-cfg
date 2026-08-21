@@ -17,8 +17,6 @@ in
       };
     }
     (lib.mkIf hasSwap {
-      boot.resumeDevice = "/dev/disk/by-partlabel/disk-main-swap";
-
       systemd.sleep.settings.Sleep = {
         AllowHibernation = "yes";
         AllowSuspendThenHibernate = "yes";

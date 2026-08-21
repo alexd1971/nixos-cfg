@@ -9,7 +9,7 @@ inputs.nixpkgs.lib.nixosSystem {
     inherit inputs;
   };
 
-modules = [
+  modules = [
     inputs.disko.nixosModules.disko
     inputs.home-manager.nixosModules.home-manager
     ../../modules/common
@@ -21,6 +21,7 @@ modules = [
       local.install = {
         disk = "/dev/sda";
         swapSize = "10G";
+        luks = true;
       };
 
       home-manager.useGlobalPkgs = true;
