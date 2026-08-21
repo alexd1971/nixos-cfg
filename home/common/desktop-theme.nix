@@ -5,8 +5,8 @@
   home.pointerCursor = {
     enable = true;
     gtk.enable = true;
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
+    package = pkgs.adwaita-icon-theme;
+    name = "Adwaita";
     size = 30;
   };
 
@@ -14,13 +14,13 @@
     enable = true;
 
     theme = {
-      package = pkgs.catppuccin-gtk;
-      name = "catppuccin-frappe-blue-standard";
+      package = pkgs.nordic;
+      name = "Nordic-bluish-accent";
     };
 
     iconTheme = {
-      package = pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
+      package = pkgs.nordzy-icon-theme;
+      name = "Nordzy-dark";
     };
 
     font = {

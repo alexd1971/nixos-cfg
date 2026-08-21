@@ -37,16 +37,16 @@ in
       }
 
       window {
-        background: #303446;
-        color: #c6d0f5;
+        background: #2e3440;
+        color: #d8dee9;
       }
 
       #input {
         margin: 8px;
         padding: 8px;
         border-radius: 8px;
-        background: #414559;
-        color: #c6d0f5;
+        background: #3b4252;
+        color: #eceff4;
       }
 
       #entry {
@@ -54,8 +54,8 @@ in
       }
 
       #entry:selected {
-        background: #8caaee;
-        color: #232634;
+        background: #5e81ac;
+        color: #eceff4;
       }
     '';
   };
@@ -70,47 +70,47 @@ in
       }
 
       window#waybar {
-        background: rgba(35, 38, 52, 0.96);
-        color: #c6d0f5;
+        background: rgba(46, 52, 64, 0.96);
+        color: #d8dee9;
         min-height: 36px;
       }
 
       #workspaces button {
-        color: #a5adce;
+        color: #d8dee9;
         padding: 0 10px;
       }
 
       #workspaces button.focused,
       #workspaces button.active {
-        color: #232634;
-        background: #8caaee;
+        color: #eceff4;
+        background: #5e81ac;
         border-radius: 8px;
       }
 
       #network {
-        color: #81c8be;
+        color: #8fbcbb;
       }
 
       #pulseaudio {
-        color: #ca9ee6;
+        color: #b48ead;
       }
 
       #cpu {
-        color: #e5c890;
+        color: #ebcb8b;
       }
 
       #memory {
-        color: #a6d189;
+        color: #a3be8c;
       }
 
       #clock {
-        color: #babbf1;
+        color: #88c0d0;
       }
 
       #custom-keyboard,
       #custom-launcher,
       #custom-power {
-        color: #8caaee;
+        color: #81a1c1;
       }
 
       #clock,
@@ -233,8 +233,8 @@ in
     dmenu_command = ${pkgs.wofi}/bin/wofi --dmenu --insensitive --prompt Networks
     compact = False
         highlight = True
-    highlight_fg = #232634
-    highlight_bg = #8caaee
+    highlight_fg = #eceff4
+    highlight_bg = #5e81ac
     highlight_bold = True
     pinentry = ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
     wifi_chars = ▂▄▆█
@@ -315,32 +315,32 @@ in
 
       colors = {
         focused = {
-          border = "#8caaee";
-          background = "#303446";
-          text = "#c6d0f5";
-          indicator = "#85c1dc";
-          childBorder = "#8caaee";
+          border = "#88c0d0";
+          background = "#2e3440";
+          text = "#eceff4";
+          indicator = "#81a1c1";
+          childBorder = "#88c0d0";
         };
         focusedInactive = {
-          border = "#626880";
-          background = "#303446";
-          text = "#c6d0f5";
-          indicator = "#51576d";
-          childBorder = "#626880";
+          border = "#4c566a";
+          background = "#2e3440";
+          text = "#d8dee9";
+          indicator = "#434c5e";
+          childBorder = "#4c566a";
         };
         unfocused = {
-          border = "#51576d";
-          background = "#232634";
-          text = "#a5adce";
-          indicator = "#414559";
-          childBorder = "#51576d";
+          border = "#3b4252";
+          background = "#2e3440";
+          text = "#d8dee9";
+          indicator = "#3b4252";
+          childBorder = "#3b4252";
         };
         urgent = {
-          border = "#e78284";
-          background = "#303446";
-          text = "#c6d0f5";
-          indicator = "#e78284";
-          childBorder = "#e78284";
+          border = "#bf616a";
+          background = "#3b4252";
+          text = "#eceff4";
+          indicator = "#bf616a";
+          childBorder = "#bf616a";
         };
       };
 

@@ -20,12 +20,12 @@
   services.displayManager.regreet = {
     enable = true;
     theme = {
-      package = pkgs.catppuccin-gtk;
-      name = "catppuccin-frappe-blue-standard";
+      package = pkgs.nordic;
+      name = "Nordic-bluish-accent";
     };
     iconTheme = {
-      package = pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
+      package = pkgs.nordzy-icon-theme;
+      name = "Nordzy-dark";
     };
     font = {
       package = pkgs.dejavu_fonts;
@@ -33,8 +33,8 @@
       size = 12;
     };
     cursorTheme = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
     };
     extraCss = ''
       #reboot_button,
@@ -106,7 +106,7 @@
       # Run ReGreet inside a tiny Sway session so the greeter works on Wayland.
       greeterSwayConfig = pkgs.writeText "greeter-sway.conf" ''
         font pango:DejaVu Sans 12
-        seat * xcursor_theme Bibata-Modern-Ice 30
+        seat * xcursor_theme Adwaita 30
         exec "${pkgs.regreet}/bin/regreet >/dev/null 2>&1; printf '\033[2J\033[H'; ${pkgs.sway}/bin/swaymsg exit >/dev/null 2>&1"
         input "type:touchpad" {
           tap enabled
@@ -126,11 +126,11 @@
 
   # Session tools used by the Home Manager Sway config.
   environment.systemPackages = with pkgs; [
-    bibata-cursors
     swayidle
     swaylock
 
-    papirus-icon-theme
+    adwaita-icon-theme
+    nordzy-icon-theme
 
     foot
     waybar
