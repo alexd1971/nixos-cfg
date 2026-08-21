@@ -1,6 +1,13 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
+  timeLocale = config.home.sessionVariables.LC_TIME or null;
+
   keyboardLayout = pkgs.writeShellScript "waybar-keyboard-layout" ''
     layout=$(
       ${pkgs.sway}/bin/swaymsg -t get_inputs -r \
@@ -18,6 +25,13 @@ let
         printf '⌨\n'
         ;;
     esac
+  '';
+
+  # gsimplecal reads locale from the environment; the user's LC_TIME may not be
+  # exported in sessions started by greetd, so set it explicitly here.
+  calendar = pkgs.writeShellScript "waybar-calendar" ''
+    ${lib.optionalString (timeLocale != null) "export LC_TIME=${lib.escapeShellArg timeLocale}"}
+    exec ${pkgs.gsimplecal}/bin/gsimplecal
   '';
 in
 {
@@ -122,6 +136,14 @@ in
         "custom/power"
       ];
 
+      "sway/window" = {
+        # The calendar is a transient popup; its app id is not useful as a
+        # focused-window title in the panel.
+        rewrite = {
+          "^gsimplecal$" = "";
+        };
+      };
+
       "custom/launcher" = {
         format = "󰀻";
         tooltip = false;
@@ -165,9 +187,15 @@ in
       };
 
       clock = {
-        format = "{:%a %d.%m %H:%M}";
-        on-click = "${pkgs.gsimplecal}/bin/gsimplecal";
+        # The L modifier makes {fmt} honour the locale option for locale-sensitive
+        # specifiers (%a weekday name). Without it the clock module always uses the
+        # C locale, so weekday names stay English regardless of the locale setting.
+        format = "{:L%a %d.%m %H:%M}";
+        on-click = "${calendar}";
         tooltip = false;
+      }
+      // lib.optionalAttrs (timeLocale != null) {
+        locale = timeLocale;
       };
 
       # Power menu keeps suspend/hibernate/shutdown reachable without a full desktop shell.
@@ -189,6 +217,32 @@ in
       };
     };
   };
+
+  # Calendar popup opened from the Waybar clock.
+  xdg.configFile."gsimplecal/config".text = ''
+    show_calendar = 1
+    show_timezones = 0
+    mark_today = 1
+    show_week_numbers = 1
+    close_on_unfocus = 1
+    close_on_mouseleave = 0
+    mainwindow_decorated = 0
+    mainwindow_keep_above = 1
+    mainwindow_sticky = 1
+    mainwindow_skip_taskbar = 1
+    mainwindow_resizable = 0
+    mainwindow_position = none
+    mainwindow_xoffset = 0
+    mainwindow_yoffset = 0
+  '';
+
+  # Keep the calendar popup out of the tiling layout.
+  wayland.windowManager.sway.config.window.commands = [
+    {
+      criteria.app_id = "gsimplecal";
+      command = "floating enable, sticky enable, border none, move position mouse, move left 40 px, move down 48 px";
+    }
+  ];
 
   # Launcher settings used by the network module on right click.
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
