@@ -1,5 +1,25 @@
 { config, pkgs, ... }:
 
+let
+  keyboardLayout = pkgs.writeShellScript "waybar-keyboard-layout" ''
+    layout=$(
+      ${pkgs.sway}/bin/swaymsg -t get_inputs -r \
+        | ${pkgs.jq}/bin/jq -r '[.[] | select(.type == "keyboard" and .xkb_active_layout_name != null)][0].xkb_active_layout_name // ""'
+    )
+
+    case "$layout" in
+      *Russian*|*Русская*|*ru*)
+        printf '🇷🇺\n'
+        ;;
+      *English*|*US*|*us*)
+        printf '🇺🇸\n'
+        ;;
+      *)
+        printf '⌨\n'
+        ;;
+    esac
+  '';
+in
 {
   # User-facing Wayland applications configured through Home Manager.
   programs.foot = {
@@ -17,16 +37,16 @@
       }
 
       window {
-        background: #18181b;
-        color: #f4f4f5;
+        background: #303446;
+        color: #c6d0f5;
       }
 
       #input {
         margin: 8px;
         padding: 8px;
         border-radius: 8px;
-        background: #27272a;
-        color: #f4f4f5;
+        background: #414559;
+        color: #c6d0f5;
       }
 
       #entry {
@@ -34,7 +54,8 @@
       }
 
       #entry:selected {
-        background: #3f3f46;
+        background: #8caaee;
+        color: #232634;
       }
     '';
   };
@@ -49,20 +70,47 @@
       }
 
       window#waybar {
-        background: rgba(24, 24, 27, 0.96);
-        color: #f4f4f5;
+        background: rgba(35, 38, 52, 0.96);
+        color: #c6d0f5;
         min-height: 36px;
       }
 
       #workspaces button {
-        color: #a1a1aa;
+        color: #a5adce;
         padding: 0 10px;
       }
 
       #workspaces button.focused,
       #workspaces button.active {
-        color: #ffffff;
-        background: #3f3f46;
+        color: #232634;
+        background: #8caaee;
+        border-radius: 8px;
+      }
+
+      #network {
+        color: #81c8be;
+      }
+
+      #pulseaudio {
+        color: #ca9ee6;
+      }
+
+      #cpu {
+        color: #e5c890;
+      }
+
+      #memory {
+        color: #a6d189;
+      }
+
+      #clock {
+        color: #babbf1;
+      }
+
+      #custom-keyboard,
+      #custom-launcher,
+      #custom-power {
+        color: #8caaee;
       }
 
       #clock,
@@ -71,6 +119,8 @@
       #network,
       #pulseaudio,
       #tray,
+      #custom-keyboard,
+      #custom-launcher,
       #custom-power {
         padding: 0 8px;
       }
@@ -79,8 +129,10 @@
       #memory,
       #network,
       #pulseaudio,
+      #custom-keyboard,
+      #custom-launcher,
       #custom-power {
-        font-family: "Symbols Nerd Font Mono", "DejaVu Sans", sans-serif;
+        font-family: "Symbols Nerd Font Mono", "Noto Color Emoji", "DejaVu Sans", sans-serif;
       }
     '';
 
@@ -90,6 +142,7 @@
       height = 40;
 
       modules-left = [
+        "custom/launcher"
         "sway/workspaces"
         "sway/mode"
       ];
@@ -101,21 +154,41 @@
         "pulseaudio"
         "cpu"
         "memory"
+        "custom/keyboard"
         "clock"
         "tray"
         "custom/power"
       ];
 
+      "custom/launcher" = {
+        format = "󰀻";
+        tooltip = false;
+        on-click = "${pkgs.wofi}/bin/wofi --show drun";
+      };
+
+      "custom/keyboard" = {
+        exec = "${keyboardLayout}";
+        interval = 1;
+        on-click = "${pkgs.sway}/bin/swaymsg input type:keyboard xkb_switch_layout next";
+        tooltip = false;
+      };
+
       network = {
         format-wifi = "  {signalStrength}%";
         format-ethernet = "  {ipaddr}/{cidr}";
         format-disconnected = "";
+        on-click = "${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
+        on-click-right = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
         tooltip = false;
       };
 
       pulseaudio = {
         format = "  {volume}%";
         format-muted = "";
+        on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+        on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
+        on-scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
         tooltip = false;
       };
 
@@ -155,6 +228,34 @@
   };
 
   # GTK menu consumed by Waybar's custom power button.
+  xdg.configFile."networkmanager-dmenu/config.ini".text = ''
+    [dmenu]
+    dmenu_command = ${pkgs.wofi}/bin/wofi --dmenu --insensitive --prompt Networks
+    compact = False
+        highlight = True
+    highlight_fg = #232634
+    highlight_bg = #8caaee
+    highlight_bold = True
+    pinentry = ${pkgs.pinentry-gnome3}/bin/pinentry-gnome3
+    wifi_chars = ▂▄▆█
+    format = {name}  {sec}  {bars}
+    list_saved = False
+    prompt = Networks
+
+    [pinentry]
+    description = Network password
+    prompt = Password:
+
+    [editor]
+    terminal = ${pkgs.foot}/bin/foot
+    gui_if_available = True
+    gui = ${pkgs.networkmanagerapplet}/bin/nm-connection-editor
+
+    [nmdm]
+    rescan_delay = 5
+    show_notifications = True
+  '';
+
   xdg.configFile."waybar/power_menu.xml".text = ''
     <?xml version="1.0" encoding="UTF-8"?>
     <interface>
@@ -214,32 +315,32 @@
 
       colors = {
         focused = {
-          border = "#7dd3fc";
-          background = "#18181b";
-          text = "#f4f4f5";
-          indicator = "#38bdf8";
-          childBorder = "#7dd3fc";
+          border = "#8caaee";
+          background = "#303446";
+          text = "#c6d0f5";
+          indicator = "#85c1dc";
+          childBorder = "#8caaee";
         };
         focusedInactive = {
-          border = "#52525b";
-          background = "#18181b";
-          text = "#d4d4d8";
-          indicator = "#3f3f46";
-          childBorder = "#52525b";
+          border = "#626880";
+          background = "#303446";
+          text = "#c6d0f5";
+          indicator = "#51576d";
+          childBorder = "#626880";
         };
         unfocused = {
-          border = "#3f3f46";
-          background = "#18181b";
-          text = "#a1a1aa";
-          indicator = "#27272a";
-          childBorder = "#3f3f46";
+          border = "#51576d";
+          background = "#232634";
+          text = "#a5adce";
+          indicator = "#414559";
+          childBorder = "#51576d";
         };
         urgent = {
-          border = "#ef4444";
-          background = "#7f1d1d";
-          text = "#ffffff";
-          indicator = "#ef4444";
-          childBorder = "#ef4444";
+          border = "#e78284";
+          background = "#303446";
+          text = "#c6d0f5";
+          indicator = "#e78284";
+          childBorder = "#e78284";
         };
       };
 
@@ -283,6 +384,14 @@
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+e" = "exec swaymsg exit";
 
+          "XF86AudioRaiseVolume" =
+            "exec ${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
+          "XF86AudioLowerVolume" = "exec ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+          "XF86AudioMute" = "exec ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          "XF86AudioMicMute" = "exec ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+          "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set +10%";
+          "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
+
           "${modifier}+h" = "focus left";
           "${modifier}+j" = "focus down";
           "${modifier}+k" = "focus up";
@@ -299,4 +408,5 @@
         // builtins.foldl' (acc: ws: acc // (switchToWorkspace ws)) { } workspaces;
     };
   };
+
 }

@@ -17,8 +17,6 @@
     slurp
 
     xdg-utils
-
-    pavucontrol
   ];
 
   # Portals are needed for screenshots, file pickers, and screen sharing under Sway.
