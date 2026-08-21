@@ -1,6 +1,8 @@
 { config, lib, ... }:
-let hasSwap = config.local.install.swapSize != null;
-in {
+let
+  hasSwap = config.local.install.swapSize != null;
+in
+{
   config = lib.mkMerge [
     {
       # Let firmware/platform profiles handle laptop performance and battery tradeoffs.
@@ -8,8 +10,7 @@ in {
 
       services.logind = {
         # Only request suspend-then-hibernate when a resume-capable swap exists.
-        settings.Login.HandleLidSwitch =
-          lib.mkIf hasSwap "suspend-then-hibernate";
+        settings.Login.HandleLidSwitch = lib.mkIf hasSwap "suspend-then-hibernate";
         settings.Login.HandleLidSwitchExternalPower = "ignore";
       };
     }

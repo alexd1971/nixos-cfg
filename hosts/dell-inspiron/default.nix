@@ -1,4 +1,7 @@
-{ inputs, system ? "x86_64-linux", }:
+{
+  inputs,
+  system ? "x86_64-linux",
+}:
 inputs.nixpkgs.lib.nixosSystem {
   inherit system;
 

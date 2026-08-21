@@ -7,39 +7,50 @@ let
   luks = cfg.luks;
 
   # One switch controls the whole install layout: either root and swap are encrypted or neither is.
-  rootContent = if luks then {
-    type = "luks";
-    name = "root";
-    settings = { allowDiscards = true; };
-    content = {
-      type = "filesystem";
-      format = "ext4";
-      mountpoint = "/";
-    };
-  } else {
-    type = "filesystem";
-    format = "ext4";
-    mountpoint = "/";
-  };
+  rootContent =
+    if luks then
+      {
+        type = "luks";
+        name = "root";
+        settings = {
+          allowDiscards = true;
+        };
+        content = {
+          type = "filesystem";
+          format = "ext4";
+          mountpoint = "/";
+        };
+      }
+    else
+      {
+        type = "filesystem";
+        format = "ext4";
+        mountpoint = "/";
+      };
 
   # Encrypted swap is a stable LUKS device so hibernation can resume from it.
-  swapContent = if luks then {
-    type = "luks";
-    name = "swap";
-    settings = {
-      allowDiscards = true;
-      # After systemd-cryptenroll, systemd opens swap from TPM2 without a second passphrase.
-      crypttabExtraOpts = [ "tpm2-device=auto" ];
-    };
-    content = {
-      type = "swap";
-      resumeDevice = true;
-    };
-  } else {
-    type = "swap";
-    resumeDevice = true;
-  };
-in {
+  swapContent =
+    if luks then
+      {
+        type = "luks";
+        name = "swap";
+        settings = {
+          allowDiscards = true;
+          # After systemd-cryptenroll, systemd opens swap from TPM2 without a second passphrase.
+          crypttabExtraOpts = [ "tpm2-device=auto" ];
+        };
+        content = {
+          type = "swap";
+          resumeDevice = true;
+        };
+      }
+    else
+      {
+        type = "swap";
+        resumeDevice = true;
+      };
+in
+{
   options.local.install = {
     disk = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
@@ -52,24 +63,23 @@ in {
       type = lib.types.nullOr lib.types.str;
       default = null;
       example = "16G";
-      description =
-        "Optional swap partition size. If null, no swap partition is created.";
+      description = "Optional swap partition size. If null, no swap partition is created.";
     };
 
     luks = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description =
-        "Encrypt the root partition with LUKS. The LUKS password is set interactively during nixos-anywhere installation.";
+      description = "Encrypt the root partition with LUKS. The LUKS password is set interactively during nixos-anywhere installation.";
     };
   };
 
   config = {
-    assertions = [{
-      assertion = installDisk != null && installDisk != "";
-      message =
-        "local.install.disk must point to the target installation disk, for example /dev/nvme0n1 or /dev/sda.";
-    }];
+    assertions = [
+      {
+        assertion = installDisk != null && installDisk != "";
+        message = "local.install.disk must point to the target installation disk, for example /dev/nvme0n1 or /dev/sda.";
+      }
+    ];
 
     disko.devices = {
       disk.main = {
@@ -98,7 +108,8 @@ in {
               size = "100%";
               content = rootContent;
             };
-          } // lib.optionalAttrs hasSwap {
+          }
+          // lib.optionalAttrs hasSwap {
             swap = {
               priority = 2;
               size = swapSize;

@@ -12,12 +12,22 @@
       layer = "top";
       position = "top";
 
-      modules-left = [ "sway/workspaces" "sway/mode" ];
+      modules-left = [
+        "sway/workspaces"
+        "sway/mode"
+      ];
 
       modules-center = [ "sway/window" ];
 
-      modules-right =
-        [ "network" "pulseaudio" "cpu" "memory" "clock" "tray" "custom/power" ];
+      modules-right = [
+        "network"
+        "pulseaudio"
+        "cpu"
+        "memory"
+        "clock"
+        "tray"
+        "custom/power"
+      ];
 
       # Power menu keeps suspend/hibernate/shutdown reachable without a full desktop shell.
       "custom/power" = {
@@ -94,38 +104,50 @@
         xkb_options = "grp:win_space_toggle";
       };
 
-      bars = [{ command = "waybar"; }];
+      bars = [ { command = "waybar"; } ];
 
-      keybindings = let
-        modifier = "Mod4";
-        workspaces = [ "1" "2" "3" "4" "5" "6" "7" "8" "9" "0" ];
-        # Generate workspace bindings mechanically so switch and move stay in sync.
-        switchToWorkspace = ws: {
-          "${modifier}+${ws}" = "workspace number ${ws}";
-          "${modifier}+Shift+${ws}" =
-            "move container to workspace number ${ws}";
-        };
-      in {
-        "${modifier}+Return" = "exec foot";
-        "${modifier}+d" = "exec wofi --show drun";
-        "${modifier}+Shift+q" = "kill";
-        "${modifier}+Shift+c" = "reload";
-        "${modifier}+Shift+e" = "exec swaymsg exit";
+      keybindings =
+        let
+          modifier = "Mod4";
+          workspaces = [
+            "1"
+            "2"
+            "3"
+            "4"
+            "5"
+            "6"
+            "7"
+            "8"
+            "9"
+            "0"
+          ];
+          # Generate workspace bindings mechanically so switch and move stay in sync.
+          switchToWorkspace = ws: {
+            "${modifier}+${ws}" = "workspace number ${ws}";
+            "${modifier}+Shift+${ws}" = "move container to workspace number ${ws}";
+          };
+        in
+        {
+          "${modifier}+Return" = "exec foot";
+          "${modifier}+d" = "exec wofi --show drun";
+          "${modifier}+Shift+q" = "kill";
+          "${modifier}+Shift+c" = "reload";
+          "${modifier}+Shift+e" = "exec swaymsg exit";
 
-        "${modifier}+h" = "focus left";
-        "${modifier}+j" = "focus down";
-        "${modifier}+k" = "focus up";
-        "${modifier}+l" = "focus right";
+          "${modifier}+h" = "focus left";
+          "${modifier}+j" = "focus down";
+          "${modifier}+k" = "focus up";
+          "${modifier}+l" = "focus right";
 
-        "${modifier}+Shift+h" = "move left";
-        "${modifier}+Shift+j" = "move down";
-        "${modifier}+Shift+k" = "move up";
-        "${modifier}+Shift+l" = "move right";
+          "${modifier}+Shift+h" = "move left";
+          "${modifier}+Shift+j" = "move down";
+          "${modifier}+Shift+k" = "move up";
+          "${modifier}+Shift+l" = "move right";
 
-        "${modifier}+f" = "fullscreen toggle";
-        "${modifier}+w" = "floating toggle";
-      } // builtins.foldl' (acc: ws: acc // (switchToWorkspace ws)) { }
-      workspaces;
+          "${modifier}+f" = "fullscreen toggle";
+          "${modifier}+w" = "floating toggle";
+        }
+        // builtins.foldl' (acc: ws: acc // (switchToWorkspace ws)) { } workspaces;
     };
   };
 }

@@ -8,7 +8,10 @@
     shell = pkgs.bashInteractive;
 
     # wheel is for sudo, networkmanager is for local network changes without root login.
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ];
 
     # SSH bootstrap stays key-only; password login is disabled in networking.nix.
     openssh.authorizedKeys.keys = [

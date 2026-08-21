@@ -1,6 +1,9 @@
 { ... }: {
   # User config is split by application to keep system and home concerns separate.
-  imports = [ ./git.nix ./sway.nix ];
+  imports = [
+    ./git.nix
+    ./sway.nix
+  ];
 
   # Home Manager needs these fixed paths to manage files for this user.
   home.username = "alexey";
