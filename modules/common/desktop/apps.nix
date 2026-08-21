@@ -9,6 +9,7 @@
 
     # Viewers / media
     evince
+    gsimplecal
     imv
     mpv
 

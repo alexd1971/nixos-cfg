@@ -11,6 +11,7 @@
   home-manager.sharedModules = [
     ../../../home/common/desktop-theme.nix
     ../../../home/common/sway-power.nix
+    ../../../home/common/waybar.nix
   ];
 
   # Home Manager installs swaylock, but PAM auth must be enabled system-wide.
