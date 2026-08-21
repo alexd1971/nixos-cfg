@@ -7,6 +7,14 @@
     wrapperFeatures.gtk = true;
   };
 
+  # Apply the same idle/lock policy to every Home Manager user on desktop hosts.
+  home-manager.sharedModules = [
+    ../../../home/common/sway-power.nix
+  ];
+
+  # Home Manager installs swaylock, but PAM auth must be enabled system-wide.
+  security.pam.services.swaylock = { };
+
   # ReGreet gives a lightweight graphical login without pulling in a full desktop manager.
   services.displayManager.regreet = {
     enable = true;
