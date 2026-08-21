@@ -2,6 +2,7 @@
   # User config is split by application to keep system and home concerns separate.
   imports = [
     ./git.nix
+    ./localization.nix
     ./sway.nix
   ];
 
