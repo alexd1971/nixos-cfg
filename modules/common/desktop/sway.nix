@@ -9,6 +9,7 @@
 
   # Apply the same idle/lock policy to every Home Manager user on desktop hosts.
   home-manager.sharedModules = [
+    ../../../home/common/desktop-theme.nix
     ../../../home/common/sway-power.nix
   ];
 
@@ -18,6 +19,57 @@
   # ReGreet gives a lightweight graphical login without pulling in a full desktop manager.
   services.displayManager.regreet = {
     enable = true;
+    theme = {
+      package = pkgs.gnome-themes-extra;
+      name = "Adwaita-dark";
+    };
+    iconTheme = {
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus-Dark";
+    };
+    font = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Sans";
+      size = 12;
+    };
+    cursorTheme = {
+      package = pkgs.bibata-cursors;
+      name = "Bibata-Modern-Ice";
+    };
+    extraCss = ''
+      #reboot_button,
+      #poweroff_button,
+      #reboot_button:hover,
+      #poweroff_button:hover,
+      #reboot_button:checked,
+      #poweroff_button:checked,
+      button.destructive-action,
+      button.destructive-action:hover,
+      button.destructive-action:checked {
+        background: #3f3f46;
+        color: #f4f4f5;
+        border-color: #52525b;
+        box-shadow: none;
+        min-height: 32px;
+        min-width: 32px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+
+      #reboot_button,
+      #poweroff_button {
+        margin-bottom: 0;
+      }
+
+      #reboot_button {
+        margin-right: 4px;
+      }
+
+      button.destructive-action:hover {
+        background: #52525b;
+      }
+    '';
     settings = {
       GTK = {
         application_prefer_dark_theme = true;
@@ -53,7 +105,9 @@
     let
       # Run ReGreet inside a tiny Sway session so the greeter works on Wayland.
       greeterSwayConfig = pkgs.writeText "greeter-sway.conf" ''
-        exec "${pkgs.regreet}/bin/regreet; swaymsg exit"
+        font pango:DejaVu Sans 12
+        seat * xcursor_theme Bibata-Modern-Ice 30
+        exec "${pkgs.regreet}/bin/regreet >/dev/null 2>&1; printf '\033[2J\033[H'; ${pkgs.sway}/bin/swaymsg exit >/dev/null 2>&1"
         input "type:touchpad" {
           tap enabled
           natural_scroll enabled
@@ -63,13 +117,21 @@
           xkb_options grp:win_space_toggle
         }
       '';
+      greeterSway = pkgs.writeShellScript "greeter-sway" ''
+        printf '\033[2J\033[H'
+        exec ${pkgs.sway}/bin/sway --config ${greeterSwayConfig} >/dev/null 2>&1
+      '';
     in
-    "${pkgs.sway}/bin/sway --config ${greeterSwayConfig}";
+    "${greeterSway}";
 
   # Session tools used by the Home Manager Sway config.
   environment.systemPackages = with pkgs; [
+    bibata-cursors
     swayidle
     swaylock
+
+    gnome-themes-extra
+    papirus-icon-theme
 
     foot
     waybar
