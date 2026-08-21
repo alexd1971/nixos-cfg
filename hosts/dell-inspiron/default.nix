@@ -1,9 +1,6 @@
-{
-  inputs,
-  system ? "x86_64-linux",
-}:
+{ inputs }:
 inputs.nixpkgs.lib.nixosSystem {
-  inherit system;
+  system = "x86_64-linux";
 
   specialArgs = { inherit inputs; };
 
@@ -13,6 +10,7 @@ inputs.nixpkgs.lib.nixosSystem {
     inputs.home-manager.nixosModules.home-manager
     ../../modules/common
     ../../modules/disko
+    ./boot.nix
     ./hardware.nix
     {
       networking.hostName = "dell-inspiron";

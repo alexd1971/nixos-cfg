@@ -19,7 +19,10 @@
   outputs =
     inputs@{ ... }:
     {
-      formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
+      formatter = {
+        x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.nixfmt-tree;
+        aarch64-linux = inputs.nixpkgs.legacyPackages.aarch64-linux.nixfmt-tree;
+      };
 
       # Host entries are kept as separate modules so nixos-anywhere can target them by name.
       nixosConfigurations = {
