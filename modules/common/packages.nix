@@ -1,8 +1,10 @@
 { pkgs, ... }:
 
 {
+  # vim is the fallback editor available before Home Manager user config is active.
   environment.variables.EDITOR = "vim";
 
+  # Small rescue/debugging toolbox intentionally available system-wide.
   environment.systemPackages = with pkgs; [
     # Editors
     vim

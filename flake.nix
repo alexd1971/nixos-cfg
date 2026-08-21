@@ -2,6 +2,7 @@
   description = "Modular NixOS configurations installable with nixos-anywhere";
 
   inputs = {
+    # Track unstable once and make integrations reuse the same nixpkgs.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     disko = {
@@ -15,15 +16,12 @@
     };
   };
 
-  outputs =
-    inputs@{ ... }:
-    {
-      formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.nixfmt;
+  outputs = inputs@{ ... }: {
+    formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.nixfmt;
 
-      nixosConfigurations = {
-        dell-inspiron = import ./hosts/dell-inspiron {
-          inherit inputs;
-        };
-      };
+    # Host entries are kept as separate modules so nixos-anywhere can target them by name.
+    nixosConfigurations = {
+      dell-inspiron = import ./hosts/dell-inspiron { inherit inputs; };
     };
+  };
 }
