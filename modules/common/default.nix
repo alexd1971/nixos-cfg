@@ -4,6 +4,7 @@
     ./boot.nix
     ./desktop
     ./hardware.nix
+    ./home-manager.nix
     ./localization.nix
     ./nix.nix
     ./networking.nix
