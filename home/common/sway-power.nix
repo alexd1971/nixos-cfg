@@ -10,7 +10,15 @@ let
       "$@"
   '';
 
-  hasSystemInhibitor = pkgs.writeShellScript "has-system-inhibitor" ''
+  hasIdleInhibitor = pkgs.writeShellScript "has-idle-inhibitor" ''
+    if ${pkgs.systemd}/bin/systemd-inhibit --list --no-legend | ${pkgs.gnugrep}/bin/grep -qE '(^|:)idle(:|$)'; then
+      exit 0
+    fi
+
+    exit 1
+  '';
+
+  hasSleepOrIdleInhibitor = pkgs.writeShellScript "has-sleep-or-idle-inhibitor" ''
     if ${pkgs.systemd}/bin/systemd-inhibit --list --no-legend | ${pkgs.gnugrep}/bin/grep -qE 'sleep|idle'; then
       exit 0
     fi
@@ -19,7 +27,7 @@ let
   '';
 
   screenOffIfUninhibited = pkgs.writeShellScript "screen-off-if-uninhibited" ''
-    if ${hasSystemInhibitor}; then
+    if ${hasIdleInhibitor}; then
       exit 0
     fi
 
@@ -27,7 +35,7 @@ let
   '';
 
   suspendIfIdle = pkgs.writeShellScript "suspend-if-idle" ''
-    if ${hasSystemInhibitor}; then
+    if ${hasSleepOrIdleInhibitor}; then
       exit 0
     fi
 
@@ -68,6 +76,13 @@ let
 in
 
 {
+  wayland.windowManager.sway = {
+    # Hide the Wayland pointer after a short idle period, including on swaylock.
+    extraConfig = ''
+      seat * hide_cursor 1000
+    '';
+  };
+
   # Shared Sway idle policy for every Home Manager user on desktop hosts.
   services.swayidle = {
     enable = true;
