@@ -9,6 +9,9 @@ in
       services.power-profiles-daemon.enable = true;
 
       services.logind = {
+        settings.Login.HandlePowerKey = "ignore";
+        settings.Login.HandlePowerKeyLongPress = "poweroff";
+
         # Only request suspend-then-hibernate when a resume-capable swap exists.
         settings.Login.HandleLidSwitch = lib.mkIf hasSwap "suspend-then-hibernate";
         settings.Login.HandleLidSwitchExternalPower = "ignore";
