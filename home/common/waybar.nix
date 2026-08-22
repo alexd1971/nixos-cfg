@@ -33,6 +33,8 @@ let
     ${lib.optionalString (timeLocale != null) "export LC_TIME=${lib.escapeShellArg timeLocale}"}
     exec ${pkgs.gsimplecal}/bin/gsimplecal
   '';
+
+  walker = lib.getExe config.programs.walker.package;
 in
 {
   # Shared panel for every Sway desktop user.
@@ -147,7 +149,7 @@ in
       "custom/launcher" = {
         format = "󰀻";
         tooltip = false;
-        on-click = "${pkgs.wofi}/bin/wofi --show drun";
+        on-click = "${walker}";
       };
 
       "custom/keyboard" = {
@@ -247,7 +249,7 @@ in
   # Launcher settings used by the network module on right click.
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]
-    dmenu_command = ${pkgs.wofi}/bin/wofi --dmenu --insensitive --prompt Networks
+    dmenu_command = ${walker} --dmenu --placeholder Networks
     compact = False
     highlight = True
     highlight_fg = #eceff4

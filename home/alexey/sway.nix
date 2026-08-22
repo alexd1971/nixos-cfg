@@ -8,37 +8,6 @@
       font = "DejaVu Sans Mono:size=14";
     };
   };
-  programs.wofi = {
-    enable = true;
-    style = ''
-      * {
-        font-family: "DejaVu Sans", "Symbols Nerd Font Mono", sans-serif;
-        font-size: 16px;
-      }
-
-      window {
-        background: #2e3440;
-        color: #d8dee9;
-      }
-
-      #input {
-        margin: 8px;
-        padding: 8px;
-        border-radius: 8px;
-        background: #3b4252;
-        color: #eceff4;
-      }
-
-      #entry {
-        padding: 8px;
-      }
-
-      #entry:selected {
-        background: #5e81ac;
-        color: #eceff4;
-      }
-    '';
-  };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -47,7 +16,7 @@
       # Keep the same keyboard/touchpad defaults in the user session and greeter.
       modifier = "Mod4";
       terminal = "foot";
-      menu = "wofi --show drun";
+      menu = "walker";
       fonts = {
         names = [ "DejaVu Sans" ];
         size = 13.0;
@@ -128,7 +97,7 @@
         in
         {
           "${modifier}+Return" = "exec foot";
-          "${modifier}+d" = "exec wofi --show drun";
+          "${modifier}+d" = "exec walker";
           "${modifier}+Shift+q" = "kill";
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+e" = "exec swaymsg exit";

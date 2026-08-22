@@ -11,6 +11,7 @@
   home-manager.sharedModules = [
     ../../../home/common/desktop-theme.nix
     ../../../home/common/sway-power.nix
+    ../../../home/common/walker.nix
     ../../../home/common/waybar.nix
   ];
 
@@ -135,6 +136,5 @@
 
     foot
     waybar
-    wofi
   ];
 }
