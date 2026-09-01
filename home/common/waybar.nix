@@ -49,12 +49,12 @@ in
 
       window#waybar {
         background: rgba(46, 52, 64, 0.96);
-        color: #d8dee9;
+        color: #eceff4;
         min-height: 36px;
       }
 
       #workspaces button {
-        color: #d8dee9;
+        color: #eceff4;
         padding: 0 10px;
       }
 
@@ -65,35 +65,7 @@ in
         border-radius: 8px;
       }
 
-      #network {
-        color: #8fbcbb;
-      }
-
-      #pulseaudio {
-        color: #b48ead;
-      }
-
-      #cpu {
-        color: #ebcb8b;
-      }
-
-      #memory {
-        color: #a3be8c;
-      }
-
-      #clock {
-        color: #88c0d0;
-      }
-
-      #custom-keyboard,
-      #custom-launcher,
-      #custom-power {
-        color: #81a1c1;
-      }
-
       #clock,
-      #cpu,
-      #memory,
       #network,
       #pulseaudio,
       #tray,
@@ -103,15 +75,6 @@ in
         padding: 0 8px;
       }
 
-      #cpu,
-      #memory,
-      #network,
-      #pulseaudio,
-      #custom-keyboard,
-      #custom-launcher,
-      #custom-power {
-        font-family: "Symbols Nerd Font Mono", "Noto Color Emoji", "DejaVu Sans", sans-serif;
-      }
     '';
 
     settings.mainBar = {
@@ -130,11 +93,9 @@ in
       modules-right = [
         "network"
         "pulseaudio"
-        "cpu"
-        "memory"
+        "tray"
         "custom/keyboard"
         "clock"
-        "tray"
         "custom/power"
       ];
 
@@ -160,17 +121,31 @@ in
       };
 
       network = {
-        format-wifi = "  {signalStrength}%";
-        format-ethernet = "  {ipaddr}/{cidr}";
-        format-disconnected = "";
+        format-wifi = "{icon} {signalStrength}%";
+        format-ethernet = "󰈀 {ipaddr}/{cidr}";
+        format-disconnected = "󰤮";
+        format-icons = [
+          "󰤯"
+          "󰤟"
+          "󰤢"
+          "󰤥"
+          "󰤨"
+        ];
         on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
         on-click-right = "${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
         tooltip = false;
       };
 
       pulseaudio = {
-        format = "  {volume}%";
-        format-muted = "";
+        format = "{icon} {volume}%";
+        format-muted = "󰝟 0%";
+        format-icons = {
+          default = [
+            ""
+            ""
+            ""
+          ];
+        };
         on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
         on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
@@ -178,14 +153,9 @@ in
         tooltip = false;
       };
 
-      cpu = {
-        format = "  {usage}%";
-        tooltip = false;
-      };
-
-      memory = {
-        format = "󰍛  {percentage}%";
-        tooltip = false;
+      tray = {
+        icon-size = 18;
+        spacing = 8;
       };
 
       clock = {
