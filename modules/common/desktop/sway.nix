@@ -11,6 +11,7 @@
   home-manager.sharedModules = [
     ../../../home/common/desktop-theme.nix
     ../../../home/common/hardware-keys.nix
+    ../../../home/common/notifications.nix
     ../../../home/common/removable-media.nix
     ../../../home/common/sway-power.nix
     ../../../home/common/walker.nix
