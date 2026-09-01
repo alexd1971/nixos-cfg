@@ -15,6 +15,7 @@
     ../../../home/common/removable-media.nix
     ../../../home/common/sway-power.nix
     ../../../home/common/walker.nix
+    ../../../home/common/wallpaper.nix
     ../../../home/common/waybar.nix
     ../../../home/common/yazi.nix
   ];
