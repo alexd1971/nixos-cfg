@@ -37,6 +37,44 @@ let
   walker = lib.getExe config.programs.walker.package;
 in
 {
+  # Used as a dmenu-compatible backend for networkmanager_dmenu. Walker stays the
+  # main application launcher, but networkmanager_dmenu currently passes Walker
+  # an unsupported -f flag.
+  programs.fuzzel = {
+    enable = true;
+    settings = {
+      main = {
+        terminal = "${pkgs.foot}/bin/foot";
+        layer = "overlay";
+        width = 40;
+        lines = 12;
+        tabs = 2;
+        horizontal-pad = 16;
+        vertical-pad = 12;
+        inner-pad = 8;
+        font = "DejaVu Sans:size=12";
+      };
+
+      colors = {
+        background = "2e3440f5";
+        text = "eceff4ff";
+        prompt = "88c0d0ff";
+        placeholder = "d8dee9ff";
+        input = "eceff4ff";
+        match = "88c0d0ff";
+        selection = "5e81acff";
+        selection-text = "eceff4ff";
+        selection-match = "eceff4ff";
+        border = "5e81acff";
+      };
+
+      border = {
+        width = 2;
+        radius = 10;
+      };
+    };
+  };
+
   # Shared panel for every Sway desktop user.
   programs.waybar = {
     enable = true;
@@ -131,7 +169,13 @@ in
           "󰤥"
           "󰤨"
         ];
-        on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
+        menu = "on-click";
+        menu-file = "${config.xdg.configHome}/waybar/network_menu.xml";
+        menu-actions = {
+          networks = "${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
+          rescan = "${pkgs.networkmanager}/bin/nmcli device wifi rescan";
+          editor = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
+        };
         on-click-right = "${pkgs.networkmanager_dmenu}/bin/networkmanager_dmenu";
         tooltip = false;
       };
@@ -146,7 +190,12 @@ in
             ""
           ];
         };
-        on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+        menu = "on-click";
+        menu-file = "${config.xdg.configHome}/waybar/volume_menu.xml";
+        menu-actions = {
+          mute = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          mixer = "${pkgs.pavucontrol}/bin/pavucontrol";
+        };
         on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
         on-scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
@@ -219,7 +268,7 @@ in
   # Launcher settings used by the network module on right click.
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]
-    dmenu_command = ${walker} --dmenu --placeholder Networks
+    dmenu_command = ${pkgs.fuzzel}/bin/fuzzel
     compact = False
     highlight = True
     highlight_fg = #eceff4
@@ -246,6 +295,54 @@ in
   '';
 
   # GTK menu consumed by Waybar's custom power button.
+  xdg.configFile."waybar/network_menu.xml".text = ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <interface>
+      <object class="GtkMenu" id="menu">
+        <child>
+          <object class="GtkMenuItem" id="networks">
+            <property name="label">Wi-Fi networks</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="rescan">
+            <property name="label">Rescan Wi-Fi</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparatorMenuItem" id="delimiter1"/>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="editor">
+            <property name="label">Advanced settings</property>
+          </object>
+        </child>
+      </object>
+    </interface>
+  '';
+
+  xdg.configFile."waybar/volume_menu.xml".text = ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <interface>
+      <object class="GtkMenu" id="menu">
+        <child>
+          <object class="GtkMenuItem" id="mute">
+            <property name="label">Mute / unmute</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkMenuItem" id="mixer">
+            <property name="label">Advanced mixer</property>
+          </object>
+        </child>
+      </object>
+    </interface>
+  '';
+
   xdg.configFile."waybar/power_menu.xml".text = ''
     <?xml version="1.0" encoding="UTF-8"?>
     <interface>
