@@ -1,3 +1,28 @@
+{ config, ... }:
+
+let
+  defaultLayout = builtins.readFile "${config.programs.walker.package.src}/resources/themes/default/layout.xml";
+  defaultStyle = builtins.readFile "${config.programs.walker.package.src}/resources/themes/default/style.css";
+  adaptiveLayout =
+    builtins.replaceStrings
+      [
+        ''<property name="height-request">570</property>''
+        ''<property name="min-content-width">500</property>''
+      ]
+      [
+        ""
+        ""
+      ]
+      defaultLayout;
+  adaptiveStyle = ''
+    ${defaultStyle}
+
+    .input {
+      font-size: 22px;
+      padding: 14px 16px;
+    }
+  '';
+in
 {
   programs.walker = {
     enable = true;
@@ -22,15 +47,15 @@
       placeholders = {
         default = {
           input = "Search";
-          list = "No results";
+          list = "";
         };
         desktopapplications = {
           input = "Applications";
-          list = "No applications";
+          list = "";
         };
         dmenu = {
           input = "Choose";
-          list = "No options";
+          list = "";
         };
       };
 
@@ -39,10 +64,15 @@
           "desktopapplications"
           "calc"
         ];
-        empty = [ "desktopapplications" ];
+        empty = [ ];
         max_results = 40;
         ignore_preview = [ ];
       };
+    };
+
+    themes.default = {
+      style = adaptiveStyle;
+      layouts.layout = adaptiveLayout;
     };
 
     elephant.providers = [

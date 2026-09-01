@@ -120,6 +120,8 @@ in
     '';
 
     settings.mainBar = {
+      id = "main";
+      ipc = true;
       layer = "top";
       position = "top";
       height = 40;

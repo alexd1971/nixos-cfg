@@ -73,7 +73,18 @@
         xkb_options = "grp:win_space_toggle";
       };
 
-      bars = [ { command = "waybar"; } ];
+      bars = [
+        {
+          id = "main";
+          command = "waybar";
+          mode = "hide";
+          hiddenState = "hide";
+          position = "top";
+          extraConfig = ''
+            modifier Mod4
+          '';
+        }
+      ];
 
       keybindings =
         let
