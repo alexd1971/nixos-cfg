@@ -103,6 +103,10 @@ in
         border-radius: 8px;
       }
 
+      #custom-launcher {
+        font-size: 22px;
+      }
+
       #clock,
       #network,
       #pulseaudio,
@@ -146,7 +150,7 @@ in
       };
 
       "custom/launcher" = {
-        format = "󰀻";
+        format = "";
         tooltip = false;
         on-click = "${walker}";
       };
