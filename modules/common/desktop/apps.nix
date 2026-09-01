@@ -6,8 +6,6 @@
     # Everyday applications
     # Web browser.
     firefox
-    # Graphical file manager.
-    thunar
 
     # Viewers / media
     # PDF and document viewer.
@@ -28,6 +26,8 @@
     networkmanagerapplet
     # PulseAudio/PipeWire volume mixer.
     pavucontrol
+    # MPRIS media control for keyboard play/pause/next/previous keys.
+    playerctl
     # GTK pinentry dialog for password prompts.
     pinentry-gnome3
   ];

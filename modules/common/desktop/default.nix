@@ -5,6 +5,7 @@
     ./audio.nix
     ./fonts.nix
     ./greeter.nix
+    ./hardware.nix
     ./sway.nix
     ./wayland.nix
   ];

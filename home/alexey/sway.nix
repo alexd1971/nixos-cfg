@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   # User-facing Wayland applications configured through Home Manager.
@@ -14,6 +14,7 @@
 
     config = {
       # Keep the same keyboard/touchpad defaults in the user session and greeter.
+      bindkeysToCode = true;
       modifier = "Mod4";
       terminal = "foot";
       menu = "walker";
@@ -101,14 +102,6 @@
           "${modifier}+Shift+q" = "kill";
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+e" = "exec swaymsg exit";
-
-          "XF86AudioRaiseVolume" =
-            "exec ${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
-          "XF86AudioLowerVolume" = "exec ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-          "XF86AudioMute" = "exec ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          "XF86AudioMicMute" = "exec ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-          "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set +10%";
-          "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 10%-";
 
           "${modifier}+h" = "focus left";
           "${modifier}+j" = "focus down";

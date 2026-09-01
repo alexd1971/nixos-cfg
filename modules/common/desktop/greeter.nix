@@ -9,14 +9,17 @@ let
 
   # GtkImage does not scale a PNG merely because width-request changes.
   # Render the scalable NixOS logo to the exact requested size at build time.
-  nixosLogo = pkgs.runCommand "nixos-logo-${toString logoSize}.png" {
-    nativeBuildInputs = [ pkgs.imagemagick ];
-  } ''
-    magick -background none \
-      "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg" \
-      -resize ${toString logoSize}x${toString logoSize} \
-      "$out"
-  '';
+  nixosLogo =
+    pkgs.runCommand "nixos-logo-${toString logoSize}.png"
+      {
+        nativeBuildInputs = [ pkgs.imagemagick ];
+      }
+      ''
+        magick -background none \
+          "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg" \
+          -resize ${toString logoSize}x${toString logoSize} \
+          "$out"
+      '';
 
   colors = {
     background = "#2e3440";
