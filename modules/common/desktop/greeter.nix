@@ -34,6 +34,8 @@ let
     buttonHover = "#52525b";
     buttonBorder = "#52525b";
   };
+  borderWidth = 2;
+  cornerRadius = 10;
 
   systemctl = "${pkgs.systemd}/bin/systemctl";
   sway = "${pkgs.sway}/bin/sway";
@@ -93,23 +95,29 @@ let
     }
 
     entry,
+    #combo-user button,
+    #combo-session button,
     #form-combo button,
     combobox button {
       background-color: ${colors.surface};
-      border: 1px solid ${colors.border};
-      border-radius: 12px;
+      border: ${toString borderWidth}px solid ${colors.border};
+      border-radius: ${toString cornerRadius}px;
       color: ${colors.foreground};
       min-width: 0;
       padding: 10px 12px;
     }
 
     entry:focus,
+    #combo-user button:focus,
+    #combo-session button:focus,
     #form-combo button:focus,
     combobox button:focus {
       border-color: ${colors.accent};
       box-shadow: 0 0 0 1px rgba(136, 192, 208, 0.65);
     }
 
+    #combo-user,
+    #combo-session,
     #form-combo,
     combobox {
       background: transparent;
@@ -119,6 +127,7 @@ let
       padding: 0;
     }
 
+    #entry-password,
     #password-entry {
       min-width: ${toString formWidth}px;
     }
@@ -130,8 +139,8 @@ let
 
     button {
       background: ${colors.button};
-      border: 1px solid ${colors.buttonBorder};
-      border-radius: 12px;
+      border: ${toString borderWidth}px solid ${colors.buttonBorder};
+      border-radius: ${toString cornerRadius}px;
       color: ${colors.foreground};
       padding: 10px 12px;
     }
@@ -144,6 +153,7 @@ let
       background: ${colors.primary};
     }
 
+    #btn-login,
     #login-button {
       background: ${colors.primary};
       border-color: ${colors.accent};
@@ -152,23 +162,29 @@ let
       min-width: 80px;
     }
 
+    #btn-login:hover,
     #login-button:hover {
       background: ${colors.primaryHover};
       color: ${colors.background};
     }
 
+    #lbl-welcome,
     #welcome-label {
       color: ${colors.foreground};
       font-size: 32px;
       font-weight: 600;
     }
 
+    #lbl-clock,
     #clock-label {
       color: ${colors.secondary};
       font-family: monospace;
       font-size: 28px;
     }
 
+    #lbl-date,
+    #lbl-user,
+    #lbl-password,
     #date-label,
     #form-label,
     checkbutton {
@@ -180,6 +196,7 @@ let
       font-size: 14px;
     }
 
+    #entry-password,
     #password-entry {
       font-size: 16px;
     }
