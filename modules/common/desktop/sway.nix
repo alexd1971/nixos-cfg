@@ -9,6 +9,7 @@
 
   # Apply the same idle/lock policy to every Home Manager user on desktop hosts.
   home-manager.sharedModules = [
+    ../../../home/common/bluetooth.nix
     ../../../home/common/desktop-theme.nix
     ../../../home/common/hardware-keys.nix
     ../../../home/common/notifications.nix
