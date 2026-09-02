@@ -12,5 +12,5 @@ mkHost {
     luks = true;
   };
 
-  modules = [ ./hardware.nix ];
+  modules = [ ];
 }

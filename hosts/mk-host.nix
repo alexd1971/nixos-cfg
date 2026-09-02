@@ -7,6 +7,24 @@
   modules ? [ ],
 }:
 
+let
+  hostDir = ./. + "/${name}";
+  facterReport = hostDir + "/facter.json";
+  requireFacterReport =
+    if builtins.pathExists facterReport then
+      facterReport
+    else
+      throw ''
+        Missing nixos-facter report for host '${name}'.
+
+        Generate it with:
+          nix run .#remote-facter -- ${name} <ip-or-hostname> <ssh-user>
+
+        Expected path:
+          hosts/${name}/facter.json
+      '';
+in
+
 inputs.nixpkgs.lib.nixosSystem {
   inherit system;
 
@@ -21,6 +39,17 @@ inputs.nixpkgs.lib.nixosSystem {
     {
       networking.hostName = name;
       local.install = install;
+    }
+  ]
+  ++ [
+    {
+      # Per-host report generated with:
+      #   nix run .#remote-facter -- <host> <ip-or-hostname> <ssh-user>
+      #
+      # The built-in nixpkgs hardware.facter module configures CPU microcode,
+      # firmware, graphics, storage/input initrd modules, networking hardware and
+      # other detected hardware support from this report.
+      hardware.facter.reportPath = requireFacterReport;
     }
   ]
   ++ modules;
