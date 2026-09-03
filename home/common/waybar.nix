@@ -110,6 +110,7 @@ in
       #clock,
       #network,
       #pulseaudio,
+      #battery,
       #tray,
       #custom-keyboard,
       #custom-launcher,
@@ -135,10 +136,11 @@ in
       modules-center = [ "sway/window" ];
 
       modules-right = [
+        "custom/keyboard"
         "network"
         "pulseaudio"
+        "battery"
         "tray"
-        "custom/keyboard"
         "clock"
         "custom/power"
       ];
@@ -205,6 +207,30 @@ in
         on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         on-scroll-up = "${pkgs.wireplumber}/bin/wpctl set-volume --limit 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
         on-scroll-down = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+        tooltip = false;
+      };
+
+      battery = {
+        states = {
+          warning = 30;
+          critical = 15;
+        };
+        format = "{icon} {capacity}%";
+        format-charging = "󰂄 {capacity}%";
+        format-plugged = "󰚥 {capacity}%";
+        format-full = "󰁹 {capacity}%";
+        format-icons = [
+          "󰁺"
+          "󰁻"
+          "󰁼"
+          "󰁽"
+          "󰁾"
+          "󰁿"
+          "󰂀"
+          "󰂁"
+          "󰂁"
+          "󰁹"
+        ];
         tooltip = false;
       };
 
