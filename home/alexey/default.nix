@@ -3,7 +3,6 @@
   imports = [
     ./git.nix
     ./localization.nix
-    ./sway.nix
   ];
 
   # Home Manager needs these fixed paths to manage files for this user.

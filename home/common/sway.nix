@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  # User-facing Wayland applications configured through Home Manager.
+  # Shared user-facing Wayland applications configured through Home Manager.
   programs.foot = {
     enable = true;
     settings.main = {
