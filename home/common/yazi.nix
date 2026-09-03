@@ -55,13 +55,6 @@ in
     mimeType = [ "inode/directory" ];
   };
 
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "inode/directory" = "yazi.desktop";
-    };
-  };
-
   services.udiskie.settings.program_options.file_manager = "${yaziFileManager}/bin/yazi-file-manager";
 
   home.packages = with pkgs; [

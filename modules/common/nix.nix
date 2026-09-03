@@ -1,6 +1,12 @@
 { lib, ... }:
 
 {
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "slack"
+    ];
+
   nix.settings = {
     # Required for flakes and the modern nix command used by this repository.
     experimental-features = [

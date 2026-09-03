@@ -1,6 +1,7 @@
 { ... }: {
   # User config is split by application to keep system and home concerns separate.
   imports = [
+    ./apps.nix
     ./git.nix
     ./localization.nix
   ];

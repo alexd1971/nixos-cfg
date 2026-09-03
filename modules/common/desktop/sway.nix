@@ -12,6 +12,7 @@
     ../../../home/common/bluetooth.nix
     ../../../home/common/desktop-theme.nix
     ../../../home/common/hardware-keys.nix
+    ../../../home/common/mime-apps.nix
     ../../../home/common/notifications.nix
     ../../../home/common/removable-media.nix
     ../../../home/common/sway.nix
