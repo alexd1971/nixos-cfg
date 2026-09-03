@@ -8,10 +8,14 @@ let
       [
         ''<property name="height-request">570</property>''
         ''<property name="min-content-width">500</property>''
+        ''<property name="valign">center</property>''
       ]
       [
         ""
         ""
+        ''
+          <property name="valign">start</property>
+          <property name="margin-top">96</property>''
       ]
       defaultLayout;
   adaptiveStyle = ''
