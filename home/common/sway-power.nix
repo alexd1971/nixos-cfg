@@ -26,12 +26,124 @@ let
     exit 1
   '';
 
+  brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl --class=backlight";
+
+  smoothDimIfUninhibited = pkgs.writeShellScript "smooth-dim-if-uninhibited" ''
+    if ${hasIdleInhibitor}; then
+      exit 0
+    fi
+
+    state_dir="''${XDG_RUNTIME_DIR:-/tmp}/sway-power"
+    brightness_state="$state_dir/brightness"
+    token_state="$state_dir/token"
+    lock_file="$state_dir/brightness.lock"
+
+    ${pkgs.coreutils}/bin/mkdir -p "$state_dir"
+    token="$(${pkgs.coreutils}/bin/date +%s%N)-$$"
+
+    (
+      ${pkgs.util-linux}/bin/flock 9
+      printf '%s\n' "$token" > "$token_state"
+    ) 9>"$lock_file"
+
+    if current=$(${brightnessctl} get 2>/dev/null) \
+      && max=$(${brightnessctl} max 2>/dev/null) \
+      && [ "$max" -gt 0 ]; then
+      :
+    else
+      exit 0
+    fi
+
+    target=$((max * 12 / 100))
+    [ "$target" -lt 1 ] && target=1
+
+    if [ "$current" -le "$target" ]; then
+      exit 0
+    fi
+
+    (
+      ${pkgs.util-linux}/bin/flock 9
+      if [ "$(${pkgs.coreutils}/bin/cat "$token_state" 2>/dev/null || true)" = "$token" ] && [ ! -r "$brightness_state" ]; then
+        printf '%s\n' "$current" > "$brightness_state"
+      fi
+    ) 9>"$lock_file"
+
+    steps=50
+    step=1
+    while [ "$step" -le "$steps" ]; do
+      if [ "$(${pkgs.coreutils}/bin/cat "$token_state" 2>/dev/null || true)" != "$token" ]; then
+        exit 0
+      fi
+
+      value=$((current - ((current - target) * step / steps)))
+      [ "$value" -lt "$target" ] && value="$target"
+
+      (
+        ${pkgs.util-linux}/bin/flock 9
+        if [ "$(${pkgs.coreutils}/bin/cat "$token_state" 2>/dev/null || true)" = "$token" ]; then
+          ${brightnessctl} set "$value" >/dev/null 2>&1 || true
+        fi
+      ) 9>"$lock_file"
+
+      step=$((step + 1))
+      ${pkgs.coreutils}/bin/sleep 0.1
+    done
+  '';
+
   screenOffIfUninhibited = pkgs.writeShellScript "screen-off-if-uninhibited" ''
     if ${hasIdleInhibitor}; then
       exit 0
     fi
 
     exec ${pkgs.sway}/bin/swaymsg 'output * power off'
+  '';
+
+  screenOnAndRestore = pkgs.writeShellScript "screen-on-and-restore" ''
+    state_dir="''${XDG_RUNTIME_DIR:-/tmp}/sway-power"
+    brightness_state="$state_dir/brightness"
+    token_state="$state_dir/token"
+    lock_file="$state_dir/brightness.lock"
+
+    ${pkgs.coreutils}/bin/mkdir -p "$state_dir"
+    token="$(${pkgs.coreutils}/bin/date +%s%N)-$$"
+
+    (
+      ${pkgs.util-linux}/bin/flock 9
+      printf '%s\n' "$token" > "$token_state"
+    ) 9>"$lock_file"
+
+    if [ ! -r "$brightness_state" ]; then
+      ${pkgs.sway}/bin/swaymsg 'output * power on' >/dev/null 2>&1 || true
+      exit 0
+    fi
+
+    read -r target < "$brightness_state"
+    case "$target" in
+      ""|*[!0-9]*)
+        ${pkgs.coreutils}/bin/rm -f "$brightness_state"
+        exit 0
+        ;;
+    esac
+
+    if max=$(${brightnessctl} max 2>/dev/null) \
+      && [ "$max" -gt 0 ]; then
+      :
+    else
+      ${pkgs.sway}/bin/swaymsg 'output * power on' >/dev/null 2>&1 || true
+      exit 0
+    fi
+
+    [ "$target" -gt "$max" ] && target="$max"
+
+    (
+      ${pkgs.util-linux}/bin/flock 9
+      if [ "$(${pkgs.coreutils}/bin/cat "$token_state" 2>/dev/null || true)" = "$token" ]; then
+        ${brightnessctl} set "$target" >/dev/null 2>&1 || true
+        ${pkgs.coreutils}/bin/rm -f "$brightness_state"
+      fi
+    ) 9>"$lock_file"
+
+    ${pkgs.sway}/bin/swaymsg 'output * power on' >/dev/null 2>&1 || true
   '';
 
   suspendIfIdle = pkgs.writeShellScript "suspend-if-idle" ''
@@ -92,13 +204,18 @@ in
     };
     timeouts = [
       {
+        timeout = 240;
+        command = "${smoothDimIfUninhibited}";
+        resumeCommand = "${screenOnAndRestore}";
+      }
+      {
         timeout = 300;
         command = "${pkgs.swaylock}/bin/swaylock -f";
       }
       {
         timeout = 600;
         command = "${screenOffIfUninhibited}";
-        resumeCommand = "${pkgs.sway}/bin/swaymsg 'output * power on'";
+        resumeCommand = "${screenOnAndRestore}";
       }
       {
         timeout = 900;
