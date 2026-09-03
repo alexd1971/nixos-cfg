@@ -153,6 +153,12 @@ in
         };
       };
 
+      "sway/workspaces" = {
+        # Keep Sway's workspace order instead of sorting names alphabetically,
+        # where "10" would appear before "1".
+        alphabetical_sort = false;
+      };
+
       "custom/launcher" = {
         format = "";
         tooltip = false;
