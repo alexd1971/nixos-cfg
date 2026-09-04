@@ -40,6 +40,8 @@
     # Files / archives
     # Graphical archive manager for zip, tar, 7z and similar formats.
     file-roller
+    # Graphical system monitor for CPU, memory, disk, network, and processes.
+    mission-center
 
     # Desktop controls used from Sway/Waybar keybindings.
     # Backlight brightness control.
