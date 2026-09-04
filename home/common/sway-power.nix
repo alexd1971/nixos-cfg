@@ -198,6 +198,7 @@ in
   # Shared Sway idle policy for every Home Manager user on desktop hosts.
   services.swayidle = {
     enable = true;
+    systemdTargets = [ "sway-session.target" ];
     events = {
       before-sleep = "${pkgs.swaylock}/bin/swaylock -f";
       lock = "${pkgs.swaylock}/bin/swaylock -f";
