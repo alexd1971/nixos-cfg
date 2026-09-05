@@ -35,12 +35,24 @@ in
         run = "plugin mount";
         desc = "Open mount manager";
       }
+      {
+        on = [ "i" ];
+        run = "shell --orphan -- ${pkgs.sushi}/bin/sushi %h";
+        desc = "Preview hovered file with Sushi";
+      }
     ];
   };
 
   wayland.windowManager.sway.config.keybindings = {
     "Mod4+e" = "exec ${yaziFileManager}/bin/yazi-file-manager";
   };
+
+  wayland.windowManager.sway.config.window.commands = [
+    {
+      criteria.app_id = "org.gnome.NautilusPreviewer";
+      command = "floating enable, move position center";
+    }
+  ];
 
   xdg.desktopEntries.yazi = {
     name = "Yazi";
@@ -69,5 +81,6 @@ in
     ffmpegthumbnailer
     jq
     poppler-utils
+    sushi
   ];
 }

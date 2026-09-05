@@ -1,6 +1,18 @@
 { pkgs, ... }:
 
 {
+  nixpkgs.overlays = [
+    (_final: prev: {
+      sushi = prev.sushi.overrideAttrs (old: {
+        postPatch = (old.postPatch or "") + ''
+          substituteInPlace src/ui/mainWindow.js \
+            --replace-fail "        this.set_titlebar(this._titlebar);" \
+                           "        this.set_decorated(false);"
+        '';
+      });
+    })
+  ];
+
   # Enable the system Sway wrapper so sessions get the right portals and GTK env.
   programs.sway = {
     enable = true;
@@ -25,6 +37,10 @@
 
   # Home Manager installs swaylock, but PAM auth must be enabled system-wide.
   security.pam.services.swaylock = { };
+
+  # Sushi uses a D-Bus activated NautilusPreviewer process. Register its session
+  # service file system-wide so it is visible from Sway user sessions.
+  services.dbus.packages = [ pkgs.sushi ];
 
   # Session tools used by the Home Manager Sway config.
   environment.systemPackages = with pkgs; [
