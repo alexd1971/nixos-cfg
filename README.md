@@ -19,10 +19,10 @@ nix run .#remote-install -- dell-inspiron TARGET_HOST
 Generate or refresh the hardware report for an already reachable host with:
 
 ```bash
-nix run .#remote-facter -- dell-inspiron TARGET_HOST alexey
+nix run .#remote-facter -- dell-inspiron TARGET_HOST nixos
 ```
 
-After the machine is installed and SSH is available for `alexey`, apply changes remotely with:
+After the machine is installed and SSH is available for `deploy`, apply changes remotely with:
 
 ```bash
 nix run .#remote-switch -- dell-inspiron TARGET_HOST

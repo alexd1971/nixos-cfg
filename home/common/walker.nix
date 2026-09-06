@@ -1,43 +1,18 @@
-{ config, ... }:
+{ ... }:
 
-let
-  defaultLayout = builtins.readFile "${config.programs.walker.package.src}/resources/themes/default/layout.xml";
-  defaultStyle = builtins.readFile "${config.programs.walker.package.src}/resources/themes/default/style.css";
-  adaptiveLayout =
-    builtins.replaceStrings
-      [
-        ''<property name="height-request">570</property>''
-        ''<property name="min-content-width">500</property>''
-        ''<property name="valign">center</property>''
-      ]
-      [
-        ""
-        ""
-        ''
-          <property name="valign">start</property>
-          <property name="margin-top">96</property>''
-      ]
-      defaultLayout;
-  adaptiveStyle = ''
-    ${defaultStyle}
-
-    .input {
-      font-size: 22px;
-      padding: 14px 16px;
-    }
-  '';
-in
 {
   programs.walker = {
     enable = true;
     runAsService = true;
+
     config = {
       force_keyboard_focus = true;
       close_when_open = true;
       single_click_activation = true;
       hide_action_hints = true;
       hide_action_hints_dmenu = true;
-      theme = "default";
+
+      theme = "adaptive";
 
       shell = {
         layer = "overlay";
@@ -74,9 +49,9 @@ in
       };
     };
 
-    themes.default = {
-      style = adaptiveStyle;
-      layouts.layout = adaptiveLayout;
+    themes.adaptive = {
+      style = builtins.readFile ./walker/style.css;
+      layouts.layout = builtins.readFile ./walker/layout.xml;
     };
 
     elephant.providers = [

@@ -1,0 +1,11 @@
+diff --git a/src/ui/mainWindow.js b/src/ui/mainWindow.js
+--- a/src/ui/mainWindow.js
++++ b/src/ui/mainWindow.js
+@@ -124,7 +124,7 @@ var MainWindow = GObject.registerClass(class MainWindow extends Gtk.ApplicationWindow {
+                       application: application });
+         this._titlebar = new Gtk.HeaderBar({ show_close_button: true,
+                                              decoration_layout: _getDecorationLayout() });
+-        this.set_titlebar(this._titlebar);
++        this.set_decorated(false);
+
+         this._openButton = new Gtk.Button();

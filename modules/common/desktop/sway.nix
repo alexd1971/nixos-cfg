@@ -2,15 +2,7 @@
 
 {
   nixpkgs.overlays = [
-    (_final: prev: {
-      sushi = prev.sushi.overrideAttrs (old: {
-        postPatch = (old.postPatch or "") + ''
-          substituteInPlace src/ui/mainWindow.js \
-            --replace-fail "        this.set_titlebar(this._titlebar);" \
-                           "        this.set_decorated(false);"
-        '';
-      });
-    })
+    (import ../../../overlays/sushi.nix)
   ];
 
   # Enable the system Sway wrapper so sessions get the right portals and GTK env.

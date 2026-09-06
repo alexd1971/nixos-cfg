@@ -14,7 +14,6 @@ in
 
         # Only request suspend-then-hibernate when a resume-capable swap exists.
         settings.Login.HandleLidSwitch = lib.mkIf hasSwap "suspend-then-hibernate";
-        settings.Login.HandleLidSwitchExternalPower = "ignore";
       };
     }
     (lib.mkIf hasSwap {

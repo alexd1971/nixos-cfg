@@ -6,6 +6,7 @@
       enable = true;
       plugins = with pkgs; [
         thunar-volman
+        thunar-archive-plugin
       ];
     };
     xfconf.enable = true;

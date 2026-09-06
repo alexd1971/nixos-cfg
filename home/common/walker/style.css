@@ -1,0 +1,174 @@
+@define-color window_bg_color #1f1f28;
+@define-color accent_bg_color #54546d;
+@define-color theme_fg_color #f2ecbc;
+@define-color error_bg_color #c34043;
+@define-color error_fg_color #dcd7ba;
+
+* {
+  all: unset;
+}
+
+popover {
+  background: lighter(@window_bg_color);
+  border: 1px solid darker(@accent_bg_color);
+  border-radius: 18px;
+  padding: 10px;
+}
+
+scrollbar {
+  opacity: 0;
+}
+
+.normal-icons {
+  -gtk-icon-size: 16px;
+}
+
+.large-icons {
+  -gtk-icon-size: 32px;
+}
+
+.box-wrapper {
+  background: @window_bg_color;
+  border: 1px solid darker(@accent_bg_color);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    0 19px 38px rgba(0, 0, 0, 0.30),
+    0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
+.preview-box,
+.elephant-hint,
+.placeholder {
+  color: @theme_fg_color;
+}
+
+.search-container {
+  border-radius: 10px;
+}
+
+.input {
+  background: lighter(@window_bg_color);
+  caret-color: @theme_fg_color;
+  color: @theme_fg_color;
+  font-size: 22px;
+  padding: 14px 16px;
+}
+
+.input placeholder {
+  opacity: 0.5;
+}
+
+.input selection {
+  background: lighter(lighter(lighter(@window_bg_color)));
+}
+
+.list {
+  color: @theme_fg_color;
+}
+
+.item-box {
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.item-quick-activation {
+  background: alpha(@accent_bg_color, 0.25);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+child:selected .item-box,
+row:selected .item-box {
+  background: alpha(@accent_bg_color, 0.25);
+}
+
+.item-subtext {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.providerlist .item-subtext {
+  font-size: unset;
+  opacity: 0.75;
+}
+
+.item-image-text {
+  font-size: 28px;
+}
+
+.preview {
+  border: 1px solid alpha(@accent_bg_color, 0.25);
+  border-radius: 10px;
+  color: @theme_fg_color;
+}
+
+.preview .large-icons {
+  -gtk-icon-size: 64px;
+}
+
+.calc .item-text {
+  font-size: 24px;
+}
+
+.symbols .item-image {
+  font-size: 24px;
+}
+
+.todo.done .item-text-box {
+  opacity: 0.25;
+}
+
+.todo.urgent {
+  font-size: 24px;
+}
+
+.todo.active {
+  font-weight: bold;
+}
+
+.bluetooth.disconnected {
+  opacity: 0.5;
+}
+
+.keybinds {
+  border-top: 1px solid lighter(@window_bg_color);
+  color: @theme_fg_color;
+  font-size: 12px;
+  padding-top: 10px;
+}
+
+.keybind-button {
+  opacity: 0.5;
+}
+
+.keybind-button:hover {
+  opacity: 0.75;
+}
+
+.keybind-bind {
+  opacity: 0.35;
+  text-transform: lowercase;
+}
+
+.keybind-label {
+  border: 1px solid @theme_fg_color;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.error {
+  background: @error_bg_color;
+  color: @error_fg_color;
+  padding: 10px;
+}
+
+:not(.calc).current {
+  font-style: italic;
+}
+
+.preview-content.archlinuxpkgs,
+.preview-content.dnfpackages,
+.preview-content.aptpackages {
+  font-family: monospace;
+}

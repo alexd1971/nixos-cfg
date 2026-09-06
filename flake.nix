@@ -78,37 +78,33 @@
           remoteSwitch = pkgs.writeShellApplication {
             name = "nixos-remote-switch";
             runtimeInputs = [ pkgs.nixos-rebuild ];
+
             text = ''
               usage() {
                 cat <<'USAGE'
               Usage:
-                nix run .#remote-switch -- <host> <ip-or-hostname> [ssh-user]
+                nix run .#remote-switch -- <host> <ip-or-hostname>
 
-              Examples:
+              Example:
                 nix run .#remote-switch -- dell-inspiron 192.168.31.75
-                nix run .#remote-switch -- dell-inspiron 192.168.31.75 alexey
-
-              Defaults:
-                ssh-user: alexey
               USAGE
               }
 
-              if [[ $# -lt 2 || $# -gt 3 ]]; then
+              if [[ $# -ne 2 ]]; then
                 usage
                 exit 2
               fi
 
               host="$1"
               target="$2"
-              user="''${3:-alexey}"
-              target_host="$user@$target"
+
+              target_host="deploy@$target"
               flake_ref="${self}#$host"
 
               exec nixos-rebuild switch \
                 --flake "$flake_ref" \
                 --target-host "$target_host" \
-                --elevate=sudo \
-                --ask-elevate-password
+                --elevate=sudo
             '';
           };
 

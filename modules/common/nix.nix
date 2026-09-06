@@ -15,18 +15,17 @@
     ];
     auto-optimise-store = true;
     # Prefer mirrors of cache.nixos.org, but keep the official cache as fallback.
-    substituters = lib.mkForce [
+    substituters = [
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store?priority=10"
       "https://mirrors.ustc.edu.cn/nix-channels/store?priority=20"
       "https://cache.nixos.org?priority=40"
     ];
-    trusted-public-keys = lib.mkForce [
+    trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
-    # Allow wheel users to operate local Nix without switching to root.
+
     trusted-users = [
-      "root"
-      "@wheel"
+      "deploy"
     ];
   };
 

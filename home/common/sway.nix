@@ -11,7 +11,6 @@
 
   wayland.windowManager.sway = {
     enable = true;
-
     config = {
       # Keep the same keyboard/touchpad defaults in the user session and greeter.
       bindkeysToCode = true;
@@ -31,7 +30,6 @@
         inner = 6;
         outer = 2;
       };
-
       colors = {
         focused = {
           border = "#88c0d0";
@@ -62,7 +60,6 @@
           childBorder = "#bf616a";
         };
       };
-
       input."type:touchpad" = {
         tap = "enabled";
         natural_scroll = "enabled";
@@ -87,6 +84,23 @@
       ];
 
       defaultWorkspace = "workspace number 1";
+
+      modes = {
+        resize = {
+          "h" = "resize shrink width 10 px";
+          "j" = "resize grow height 10 px";
+          "k" = "resize shrink height 10 px";
+          "l" = "resize grow width 10 px";
+
+          "Left" = "resize shrink width 10 px";
+          "Down" = "resize grow height 10 px";
+          "Up" = "resize shrink height 10 px";
+          "Right" = "resize grow width 10 px";
+
+          "Escape" = "mode default";
+          "Return" = "mode default";
+        };
+      };
 
       keybindings =
         let
@@ -145,7 +159,6 @@
           "${modifier}+Shift+q" = "kill";
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+e" = "exec swaymsg exit";
-
           "${modifier}+h" = "focus left";
           "${modifier}+j" = "focus down";
           "${modifier}+k" = "focus up";
@@ -155,12 +168,11 @@
           "${modifier}+Shift+j" = "move down";
           "${modifier}+Shift+k" = "move up";
           "${modifier}+Shift+l" = "move right";
-
           "${modifier}+f" = "fullscreen toggle";
           "${modifier}+w" = "floating toggle";
+          "${modifier}+r" = "mode resize";
         }
         // builtins.foldl' (acc: ws: acc // (switchToWorkspace ws)) { } workspaces;
     };
   };
-
 }
