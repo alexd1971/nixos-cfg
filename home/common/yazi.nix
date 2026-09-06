@@ -67,8 +67,6 @@ in
     mimeType = [ "inode/directory" ];
   };
 
-  services.udiskie.settings.program_options.file_manager = "${yaziFileManager}/bin/yazi-file-manager";
-
   home.packages = with pkgs; [
     yaziFileManager
 

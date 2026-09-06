@@ -1,6 +1,18 @@
 { pkgs, ... }:
 
 {
+  programs = {
+    thunar = {
+      enable = true;
+      plugins = with pkgs; [
+        thunar-volman
+      ];
+    };
+    xfconf.enable = true;
+  };
+
+  services.tumbler.enable = true;
+
   # Graphical applications and desktop tools available to every local user.
   environment.systemPackages = with pkgs; [
     # Everyday applications

@@ -29,6 +29,7 @@
     ../../../home/common/removable-media.nix
     ../../../home/common/sway.nix
     ../../../home/common/sway-power.nix
+    ../../../home/common/thunar.nix
     ../../../home/common/walker.nix
     ../../../home/common/wallpaper.nix
     ../../../home/common/waybar.nix
